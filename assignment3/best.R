@@ -17,7 +17,7 @@ best <- function(state, outcome) {
         stop('invalid outcome')
     }
    
-   hospital_name <- ''
+   
    if (outcome == 'heart attack'){
        hospital_name <- get_hospital_name(state, 11, data)   # col 11 lists Hospital 30-Day Death (Mortality) Rates from Heart Attack   
    }
