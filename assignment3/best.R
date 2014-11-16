@@ -17,37 +17,41 @@ best <- function(state, outcome) {
         stop('invalid outcome')
     }
    
+    # state specific data
+    data <- subset(data, State==state)
    
    if (outcome == 'heart attack'){
-       hospital_name <- get_hospital_name(state, 11, data)   # col 11 lists Hospital 30-Day Death (Mortality) Rates from Heart Attack   
+       hospital_name <- get_hospital_name(11, data)   # col 11 lists Hospital 30-Day Death (Mortality) Rates from Heart Attack   
    }
    
    if (outcome == 'heart failure'){
-       hospital_name <- get_hospital_name(state, 17, data)   # col 17 lists  Hospital 30-Day Death (Mortality) Rates from Heart Failure   
+       hospital_name <- get_hospital_name(17, data)   # col 17 lists  Hospital 30-Day Death (Mortality) Rates from Heart Failure   
    }
    
    if (outcome == 'pneumonia'){
-       hospital_name <- get_hospital_name(state, 23, data)   # col 23  lists Hospital 30-Day Death (Mortality) Rates from Pneumonia 
+       hospital_name <- get_hospital_name(23, data)   # col 23  lists Hospital 30-Day Death (Mortality) Rates from Pneumonia 
    }
    hospital_name
 }
 
 
-get_hospital_name <- function(state, outcome_col, data){
-    ## Given the state and outcome column
+get_hospital_name <- function(outcome_col, data){
+    ## Given the state specific data and outcome column
     ## return the hospital name with lowest 30-day death rate
+    
     # get all hospitals in a particular state alongwith the mortality data for outcome
+    # ignore hospitals for which data is not available
     hospital_name <- c()
     mortality_rate <- c()
-    for (i in seq_len(nrow(data))){
-        if (state == data[i,7]){
-            if(!is.na(data[i, outcome_col])){
-                hospital_name <- c(hospital_name, data[i,2])       # cloumn 2 list hospital names
-                mortality_rate <- c(mortality_rate, data[i, outcome_col])
-                
-            }
-        }
-    }
+    
+    data <- subset(data, !is.na(as.numeric(data[ ,outcome_col])))
+    mortality_rate <- as.numeric(data[ ,outcome_col])       # Because we originally read the data in as character
+                                                            # (by specifying colClasses = "character") we need to
+                                                            # coerce the column to be numeric
+    
+    hospital_name <- data[,2]  
+    
+    
     index_min <- which.min(mortality_rate)
     hospital_name[index_min]
 }
