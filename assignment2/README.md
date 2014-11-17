@@ -1,4 +1,4 @@
-Programming Assignment 1: Lexical Scoping
+Programming Assignment 2: Lexical Scoping
 -----------------------------------------
 
 * cachematrix.R - Caching the inverse of a square invertible matrix
